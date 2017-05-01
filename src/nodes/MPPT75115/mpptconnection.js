@@ -2,26 +2,18 @@
 
 import SerialPort from 'serialport';
 
-import MPPTDataProcessor from './mpptdataprocessor';
-import MPPTOutput from './mpptoutput';
-
 class MPPTConnection { 
-  constructor () {
+  constructor (callback) {
 
-    this.mpptOutput = new MPPTOutput();
-    this.mpptOutput.splash(); 
+    if (typeof callback !== 'function')
+      throw 'invalid callback';
 
+    this.callback = callback;
     this.portName = '/dev/ttyS0';
     this.port = new SerialPort(this.portName, {
       baudrate: 19200,
       parser: SerialPort.parsers.readline('\x0D\x0A')
     })
-
-    this.mpptDataProcessor = new MPPTDataProcessor(
-      (data) => {
-        this.mpptOutput.flashProcessing(); 
-        this.mpptOutput.showData(data); 
-      });
   }
   
   connect() {
@@ -33,7 +25,7 @@ class MPPTConnection {
   }
 
   onSerialData(data) {
-    this.mpptDataProcessor.dataIn(data);
+    this.callback(data);
   }
 };
 
