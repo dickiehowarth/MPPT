@@ -44,7 +44,7 @@ class MPPTDataProcessor{
         // Post to 
         axios.post('http://testappxx.azurewebsites.net/api/mppt/log', dataObj)
           .then(function (response) {
-            console.log(response);
+            console.log(`Sataus: ${response.status} ${response.statusText}`);
           })
           .catch(function (response) {
             console.log(response);
