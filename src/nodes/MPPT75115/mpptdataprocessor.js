@@ -1,3 +1,4 @@
+import axios from 'axios';
 'use strict'
 
 class MPPTDataProcessor{
@@ -36,9 +37,18 @@ class MPPTDataProcessor{
         for(let data of this.Data)
         {
             let d = data.split('\t');
-            dataObj[d[0]] = d[1];
+            dataObj[d[0].replace('#', '')] = d[1];
         }
         console.log(dataObj);
+
+        // Post to 
+        axios.post('http://testappxx.azurewebsites.net/api/mppt/log', dataObj)
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
 
         if (typeof this.DataOutCallback === "function") 
         {

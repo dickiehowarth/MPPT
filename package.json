@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.17.1",
     "bme280-sensor": "^0.1.6",
     "ds18b20": "^0.1.0",
     "ds18b20-raspi": "^0.2.5",
