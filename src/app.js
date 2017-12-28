@@ -4,6 +4,8 @@ import MPPTConnection from './nodes/MPPT75115/mpptconnection';
 import MPPTDataProcessor from './nodes/MPPT75115/mpptdataprocessor';
 import MPPTOutput from './mpptoutput';
 
+console.log('starting ....');
+
 let mpptOutput = new MPPTOutput();
 mpptOutput.splash(); 
 
