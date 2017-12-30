@@ -14,7 +14,7 @@ class MPPTDataProcessor{
     dataIn(data){
         if (data.startsWith("PID\t"))
         {
-            this.recData = this.count++%10 == 0;
+            this.recData = this.count++%120 == 0;
             this.Data.length = 0;
         }
 
@@ -41,10 +41,11 @@ class MPPTDataProcessor{
         }
         console.log(dataObj);
 
+        let baseUri = 'http://mpptapp.azurewebsites.net'
         // Post to 
-        axios.post('http://testappxx.azurewebsites.net/api/mppt/log', dataObj)
+        axios.post(`${baseUri}/api/mppt/log`, dataObj)
           .then(function (response) {
-            console.log(`Sataus: ${response.status} ${response.statusText}`);
+            console.log(`Status: ${response.status} ${response.statusText}`);
           })
           .catch(function (response) {
             console.log(response);
