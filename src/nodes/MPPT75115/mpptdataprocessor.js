@@ -1,30 +1,31 @@
-import axios from 'axios';
 'use strict'
+
+import axios from 'axios';
+import moment from 'moment-timezone';
 
 class MPPTDataProcessor{
     constructor(dataOut) {
         this.Data = [];
         this.count = 0;
-        this.recData = false;
+        this.readingRecord = false;
         this.count = 0;
         this.DataOutCallback = dataOut;
     }
-
     
     dataIn(data){
         if (data.startsWith("PID\t"))
         {
-            this.recData = this.count++%120 == 0;
+            this.readingRecord = true;
             this.Data.length = 0;
         }
 
-        if (this.recData)
+        if (this.readingRecord)
         {
             this.Data.push(data);
 
             if (data.startsWith("Checksum\t"))
             {
-                this.recData = false;
+                this.readingRecord = false;
                 this.dataOut();
             }
         }
@@ -39,24 +40,33 @@ class MPPTDataProcessor{
             let d = data.split('\t');
             dataObj[d[0].replace('#', '')] = d[1];
         }
-        console.log(dataObj);
 
-        let baseUri = 'http://mpptapp.azurewebsites.net'
-        // Post to 
-        axios.post(`${baseUri}/api/mppt/log`, dataObj)
-          .then(function (response) {
-            console.log(`Status: ${response.status} ${response.statusText}`);
-          })
-          .catch(function (response) {
-            console.log(response);
-          });
-
-        if (typeof this.DataOutCallback === "function") 
+        this.count++;
+        if (this.count%10 == 0)
         {
-            this.DataOutCallback(dataObj);   
-
+            let dt = new Date();
+            console.log(`${moment(dt).format('DD-MM-YY')} ${dt.toLocaleTimeString()}`);
+            console.log(dataObj);
             let cvtObj = this.convertData(dataObj);
             console.log(cvtObj);   
+
+            if (typeof this.DataOutCallback === "function") 
+            {
+                this.DataOutCallback(dataObj);   
+            }
+        }
+
+        if (this.count%120 == 0)
+        {
+            let baseUri = 'http://mpptapp.azurewebsites.net'
+            // Post to 
+            axios.post(`${baseUri}/api/mppt/log`, dataObj)
+            .then(function (response) {
+                console.log(`Status: ${response.status} ${response.statusText}`);
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
         }
     }
 

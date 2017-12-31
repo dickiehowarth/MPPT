@@ -32,10 +32,10 @@ class MPPTOutput{
         this.lcd.clear();
         let dt = new Date();
         this.lcd.println(`${moment(dt).format('DD-MM-YY')} ${dt.toLocaleTimeString()}`, 1);
-        this.lcd.println(`Batt: ${data.V*0.001}V, ${data.I}mA `, 2);
-        this.lcd.println(`Panel: ${data.VPV*0.001}V, ${data.PPV*0.001}W`, 3);
+        this.lcd.println(`Batt: ${(data.V*0.001).toFixed(2)}V, ${data.I}mA`, 2);
+        this.lcd.println(`Panel: ${(data.VPV*0.001).toFixed(2)}V, ${data.PPV}W`, 3);
+        this.lcd.println(`Load: ${(data.IL*0.001).toFixed(2)}mA [${data.LOAD}]`, 4);
     }
-
 }
 
 export default MPPTOutput;
